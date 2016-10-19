@@ -64,7 +64,7 @@ _gsasl_gssapi_client_start (Gsasl_session * sctx, void **mech_data)
   state->context = GSS_C_NO_CONTEXT;
   state->service = GSS_C_NO_NAME;
   state->step = 0;
-  state->qop = GSASL_QOP_AUTH;	/* FIXME: Should be GSASL_QOP_AUTH_CONF. */
+  state->qop = GSASL_QOP_AUTH | GSASL_QOP_AUTH_CONF | GSASL_QOP_AUTH_INT;
 
   *mech_data = state;
 
@@ -86,10 +86,11 @@ _gsasl_gssapi_client_step (Gsasl_session * sctx,
   int conf_state;
   int res;
   const char *p;
+  int qop = 0;
 
   if (state->service == NULL)
     {
-      const char *service, *hostname;
+      const char *service, *hostname, *principal;
 
       service = gsasl_property_get (sctx, GSASL_SERVICE);
       if (!service)
@@ -99,21 +100,38 @@ _gsasl_gssapi_client_step (Gsasl_session * sctx,
       if (!hostname)
 	return GSASL_NO_HOSTNAME;
 
+	  principal = gsasl_property_get (sctx, GSASL_GSSAPI_DISPLAY_NAME);
       /* FIXME: Use asprintf. */
+      if (!principal) {
 
-      bufdesc.length = strlen (service) + 1 + strlen (hostname) + 1;
-      bufdesc.value = malloc (bufdesc.length);
-      if (bufdesc.value == NULL)
-	return GSASL_MALLOC_ERROR;
+          bufdesc.length = strlen (service) + 1 + strlen (hostname) + 1;
+          bufdesc.value = malloc (bufdesc.length);
+          if (bufdesc.value == NULL)
+                return GSASL_MALLOC_ERROR;
 
-      sprintf (bufdesc.value, "%s@%s", service, hostname);
+          sprintf (bufdesc.value, "%s@%s", service, hostname);
 
-      maj_stat = gss_import_name (&min_stat, &bufdesc,
-				  GSS_C_NT_HOSTBASED_SERVICE,
-				  &state->service);
-      free (bufdesc.value);
-      if (GSS_ERROR (maj_stat))
-	return GSASL_GSSAPI_IMPORT_NAME_ERROR;
+          maj_stat = gss_import_name (&min_stat, &bufdesc,
+                      GSS_C_NT_HOSTBASED_SERVICE,
+                      &state->service);
+          free (bufdesc.value);
+          if (GSS_ERROR (maj_stat))
+               return GSASL_GSSAPI_IMPORT_NAME_ERROR;
+     } else {
+          bufdesc.length = strlen (principal) + 1;
+          bufdesc.value = malloc (bufdesc.length);
+          if (bufdesc.value == NULL)
+                return GSASL_MALLOC_ERROR;
+
+          sprintf (bufdesc.value, "%s", principal);
+
+          maj_stat = gss_import_name (&min_stat, &bufdesc,
+                      GSS_C_NT_USER_NAME,
+                      &state->service);
+          free (bufdesc.value);
+          if (GSS_ERROR (maj_stat))
+               return GSASL_GSSAPI_IMPORT_NAME_ERROR;
+     }
     }
 
   switch (state->step)
@@ -181,6 +199,7 @@ _gsasl_gssapi_client_step (Gsasl_session * sctx,
       bufdesc.value = (void *) input;
       maj_stat = gss_unwrap (&min_stat, state->context, &bufdesc,
 			     &bufdesc2, &conf_state, &serverqop);
+
       if (GSS_ERROR (maj_stat))
 	return GSASL_GSSAPI_UNWRAP_ERROR;
 
@@ -188,6 +207,7 @@ _gsasl_gssapi_client_step (Gsasl_session * sctx,
 	return GSASL_MECHANISM_PARSE_ERROR;
 
       memcpy (clientwrap, bufdesc2.value, 4);
+      qop = (int) ((char*)bufdesc2.value)[0];
 
       maj_stat = gss_release_buffer (&min_stat, &bufdesc2);
       if (GSS_ERROR (maj_stat))
@@ -215,7 +235,9 @@ _gsasl_gssapi_client_step (Gsasl_session * sctx,
 	return GSASL_MALLOC_ERROR;
 
       {
+
 	char *q = bufdesc.value;
+	state->qop = qop;
 	q[0] = state->qop;
 	memcpy (q + 1, clientwrap + 1, 3);
 	memcpy (q + 4, p, strlen (p));
@@ -282,7 +304,6 @@ _gsasl_gssapi_client_encode (Gsasl_session * sctx,
 
   foo.length = input_len;
   foo.value = (void *) input;
-
   if (state && state->step == 3 &&
       state->qop & (GSASL_QOP_AUTH_INT | GSASL_QOP_AUTH_CONF))
     {
@@ -295,7 +316,7 @@ _gsasl_gssapi_client_encode (Gsasl_session * sctx,
       if (GSS_ERROR (maj_stat))
 	return GSASL_GSSAPI_WRAP_ERROR;
       *output_len = output_message_buffer.length;
-      *output = malloc (input_len);
+      *output = malloc (*output_len);
       if (!*output)
 	{
 	  maj_stat = gss_release_buffer (&min_stat, &output_message_buffer);
@@ -348,7 +369,7 @@ _gsasl_gssapi_client_decode (Gsasl_session * sctx,
       if (GSS_ERROR (maj_stat))
 	return GSASL_GSSAPI_UNWRAP_ERROR;
       *output_len = output_message_buffer.length;
-      *output = malloc (input_len);
+      *output = malloc (*output_len);
       if (!*output)
 	{
 	  maj_stat = gss_release_buffer (&min_stat, &output_message_buffer);
