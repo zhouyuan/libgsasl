@@ -98,10 +98,10 @@ set(SRCS
     ${LIBGSASL_SOURCE_DIR}/login/server.c
 )
 
-add_library(gsasl STATIC ${SRCS})
+add_library(libgsasl STATIC ${SRCS})
 
-target_include_directories(gsasl PUBLIC ${LIBGSASL_SOURCE_DIR})
-target_include_directories(gsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/gl)
-target_include_directories(gsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/src)
-target_include_directories(gsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/digest-md5)
-target_include_directories(gsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/linux_x86_64/include)
+target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR})
+target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/gl)
+target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/src)
+target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/digest-md5)
+target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/linux_x86_64/include)
