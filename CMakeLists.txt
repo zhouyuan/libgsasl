@@ -7,7 +7,6 @@ set(SRCS
     ${LIBGSASL_SOURCE_DIR}/gl/vasprintf.c
     ${LIBGSASL_SOURCE_DIR}/gl/gc-gnulib.c
     ${LIBGSASL_SOURCE_DIR}/gl/printf-parse.c
-    ${LIBGSASL_SOURCE_DIR}/gl/strndup.c
     ${LIBGSASL_SOURCE_DIR}/gl/memchr.c
     ${LIBGSASL_SOURCE_DIR}/gl/c-ctype.c
     ${LIBGSASL_SOURCE_DIR}/gl/getline.c
