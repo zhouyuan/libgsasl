@@ -105,3 +105,5 @@ target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/gl)
 target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/src)
 target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/digest-md5)
 target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/linux_x86_64/include)
+
+target_compile_definitions (libgsasl PRIVATE HAVE_CONFIG_H=1)
