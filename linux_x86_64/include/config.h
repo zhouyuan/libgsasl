@@ -36,7 +36,11 @@
 
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
+#ifdef __APPLE__
+#define ENABLE_NLS 0
+#else
 #define ENABLE_NLS 1
+#endif
 
 /* Define to a C preprocessor expression that evaluates to 1 or 0, depending
    whether the gnulib module gc-hmac-md5 shall be considered present. */
@@ -153,7 +157,11 @@
 #define HAVE_DLFCN_H 1
 
 /* Define to 1 if you have the <features.h> header file. */
+#ifdef __APPLE__
+#define HAVE_FEATURES_H 0
+#else
 #define HAVE_FEATURES_H 1
+#endif
 
 /* Define to 1 if you have the `flockfile' function. */
 /* #undef HAVE_FLOCKFILE */
