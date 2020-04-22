@@ -4,29 +4,18 @@ set(LIBGSASL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(LIBGSASL_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SRCS
-    ${LIBGSASL_SOURCE_DIR}/gl/vasprintf.c
     ${LIBGSASL_SOURCE_DIR}/gl/gc-gnulib.c
     ${LIBGSASL_SOURCE_DIR}/gl/printf-parse.c
-    ${LIBGSASL_SOURCE_DIR}/gl/memchr.c
     ${LIBGSASL_SOURCE_DIR}/gl/c-ctype.c
-    ${LIBGSASL_SOURCE_DIR}/gl/getline.c
-    ${LIBGSASL_SOURCE_DIR}/gl/realloc.c
-    ${LIBGSASL_SOURCE_DIR}/gl/memmem.c
     ${LIBGSASL_SOURCE_DIR}/gl/float.c
-    ${LIBGSASL_SOURCE_DIR}/gl/asprintf.c
     ${LIBGSASL_SOURCE_DIR}/gl/printf-args.c
-    ${LIBGSASL_SOURCE_DIR}/gl/getdelim.c
     ${LIBGSASL_SOURCE_DIR}/gl/hmac-sha1.c
     ${LIBGSASL_SOURCE_DIR}/gl/itold.c
     ${LIBGSASL_SOURCE_DIR}/gl/hmac-md5.c
     ${LIBGSASL_SOURCE_DIR}/gl/gc-pbkdf2-sha1.c
-    ${LIBGSASL_SOURCE_DIR}/gl/strnlen.c
     ${LIBGSASL_SOURCE_DIR}/gl/md5.c
-    ${LIBGSASL_SOURCE_DIR}/gl/strverscmp.c
     ${LIBGSASL_SOURCE_DIR}/gl/base64.c
     ${LIBGSASL_SOURCE_DIR}/gl/memxor.c
-    ${LIBGSASL_SOURCE_DIR}/gl/asnprintf.c
-    ${LIBGSASL_SOURCE_DIR}/gl/vasnprintf.c
     ${LIBGSASL_SOURCE_DIR}/gl/sha1.c
     ${LIBGSASL_SOURCE_DIR}/openid20/client.c
     ${LIBGSASL_SOURCE_DIR}/openid20/mechinfo.c
