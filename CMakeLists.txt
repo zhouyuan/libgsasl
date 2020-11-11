@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8.8)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
 set(LIBGSASL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(LIBGSASL_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(LIBGSASL_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 set(SRCS
     ${LIBGSASL_SOURCE_DIR}/gl/gc-gnulib.c
@@ -89,10 +89,29 @@ set(SRCS
 
 add_library(libgsasl STATIC ${SRCS})
 
+if (USE_KRB5)
+    target_sources(libgsasl PRIVATE
+        ${LIBGSASL_SOURCE_DIR}/gssapi/client.c
+        ${LIBGSASL_SOURCE_DIR}/gssapi/mechinfo.c
+        ${LIBGSASL_SOURCE_DIR}/gssapi/server.c
+        )
+endif()
+
 target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR})
 target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/gl)
 target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/src)
 target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/digest-md5)
 target_include_directories(libgsasl PUBLIC ${LIBGSASL_SOURCE_DIR}/linux_x86_64/include)
+target_include_directories(libgsasl PRIVATE ${LIBGSASL_BINARY_DIR})
+
+if (USE_KRB5)
+    target_link_libraries(libgsasl PUBLIC ${KRB5_LIBRARY})
+    set(WITH_KRB5 1)
+endif()
 
 target_compile_definitions (libgsasl PRIVATE HAVE_CONFIG_H=1)
+
+configure_file(
+  "${LIBGSASL_SOURCE_DIR}/linux_x86_64/include/config.h.in"
+  "${LIBGSASL_BINARY_DIR}/config.h"
+)
