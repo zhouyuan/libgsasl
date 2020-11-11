@@ -181,8 +181,21 @@
 /* Define to 1 if you have the <gssapi/gssapi.h> header file. */
 /* #undef HAVE_GSSAPI_GSSAPI_H */
 
+#cmakedefine WITH_KRB5
+
+#ifdef WITH_KRB5
+
 /* Define to 1 if you have the <gssapi.h> header file. */
-/* #undef HAVE_GSSAPI_H */
+#define HAVE_GSSAPI_H 1
+
+/* Define to 1 if you want GSSAPI. */
+#define USE_GSSAPI 1
+
+/* Define to 1 if you want KERBEROS_V5. *unused* */
+#undef USE_KERBEROS_V5
+
+
+#endif
 
 /* Define to 1 if you have the `GSS_C_NT_HOSTBASED_SERVICE' function. */
 /* #undef HAVE_GSS_C_NT_HOSTBASED_SERVICE */
@@ -918,12 +931,6 @@
 /* Define to 1 if you want GS2. */
 /* #undef USE_GS2 */
 
-/* Define to 1 if you want GSSAPI. */
-/* #undef USE_GSSAPI */
-
-/* Define to 1 if you want KERBEROS_V5. */
-/* #undef USE_KERBEROS_V5 */
-
 /* Define to 1 if you want LOGIN. */
 #define USE_LOGIN 1
 
@@ -1098,4 +1105,3 @@
 #else
 # define _GL_ATTRIBUTE_CONST /* empty */
 #endif
-
