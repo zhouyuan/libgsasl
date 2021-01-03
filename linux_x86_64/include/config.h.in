@@ -36,11 +36,7 @@
 
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
-#if defined __APPLE__ || defined __FreeBSD__
 #define ENABLE_NLS 0
-#else
-#define ENABLE_NLS 1
-#endif
 
 /* Define to a C preprocessor expression that evaluates to 1 or 0, depending
    whether the gnulib module gc-hmac-md5 shall be considered present. */
