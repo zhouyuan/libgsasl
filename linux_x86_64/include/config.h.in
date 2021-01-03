@@ -36,7 +36,7 @@
 
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
-#ifdef __APPLE__
+#if defined __APPLE__ || defined __FreeBSD__
 #define ENABLE_NLS 0
 #else
 #define ENABLE_NLS 1
@@ -157,7 +157,7 @@
 #define HAVE_DLFCN_H 1
 
 /* Define to 1 if you have the <features.h> header file. */
-#ifdef __APPLE__
+#if defined __APPLE__ || defined __FreeBSD__
 #define HAVE_FEATURES_H 0
 #else
 #define HAVE_FEATURES_H 1
