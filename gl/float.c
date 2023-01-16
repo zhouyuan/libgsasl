@@ -21,6 +21,11 @@
 #include <float.h>
 
 #if (defined _ARCH_PPC || defined _POWER) && (defined _AIX || defined __linux__) && (LDBL_MANT_DIG == 106) && defined __GNUC__
+union gl_long_double_union
+   {
+     struct { double hi; double lo; } dd;
+     long double ld;
+   };
 const union gl_long_double_union gl_LDBL_MAX =
   { { DBL_MAX, DBL_MAX / (double)134217728UL / (double)134217728UL } };
 #elif defined __i386__
