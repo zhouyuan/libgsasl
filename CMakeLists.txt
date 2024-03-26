@@ -109,6 +109,8 @@ if (USE_KRB5)
     set(WITH_KRB5 1)
 endif()
 
+find_package(OpenSSL REQUIRED)
+target_link_libraries(libgsasl OpenSSL::SSL)
 target_compile_definitions (libgsasl PRIVATE HAVE_CONFIG_H=1)
 
 configure_file(
